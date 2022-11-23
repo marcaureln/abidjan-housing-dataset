@@ -11,7 +11,7 @@
 **Run spiders:**
 
 1. While in the project directory, move to _scraper_ folder (Scrapy project): `cd ./scraper`
-2. Gather posts links: `scrapy craw links -o links.csv` # links will be output to a `links.csv` file
+2. Gather posts links: `scrapy crawl links -o links.csv` # links will be output to a `links.csv` file
 
 **Track project dependencies:**
 
