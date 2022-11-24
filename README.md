@@ -12,6 +12,7 @@
 
 1. While in the project directory, move to _scraper_ folder (Scrapy project): `cd ./scraper`
 2. Gather posts links: `scrapy crawl links -o links.csv` # links will be output to a `links.csv` file
+3. Gather posts details: `scrapy crawl posts -a links=links.csv -o posts.csv` # the links file should be relative to the scraper root folder i.e. `<repository>/scraper`
 
 **Track project dependencies:**
 
