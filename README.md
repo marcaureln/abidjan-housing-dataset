@@ -1,4 +1,17 @@
-# Abidjan Housing Dataset - Scraper
+# Abidjan Housing Dataset
+
+Kinda equivalent to the _California Housing dataset_ (you can find it on [scikit-learn](https://inria.github.io/scikit-learn-mooc/python_scripts/datasets_california_housing.html)). This dataset is resulting from data scraped from the popular listing website [Jumia Deals](https://deals.jumia.ci/). The raw data is already available (see [releases](https://github.com/marcaureln/abidjan-housing-dataset/releases)). The next step is to extract as much information as we can from it (longitude, latitude, etc., see [California Housing data description](https://github.com/ageron/handson-ml/tree/master/datasets/housing#data-description) and [Ames (Iowa) housing dataset](https://www.kaggle.com/competitions/house-prices-advanced-regression-techniques/data)).
+
+## To-do:
+
+- [x] Collect data
+- [ ] Clean and augment the dataset
+- [ ] Vizualize data
+
+## What's next?
+
+- **Make spiders configurable**: it'll make scraping other websites easier and without having to modify the code or write multiple spiders.
+-
 
 ## Getting started and contributing
 
