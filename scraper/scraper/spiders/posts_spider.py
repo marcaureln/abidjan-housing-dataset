@@ -8,8 +8,10 @@ import scrapy
 class PostsSpider(scrapy.Spider):
     '''Spider to crawl post details from listing website.'''
     name = 'posts'
+    # TODO: Load start_urls from database
     start_urls = []
 
+    # TODO: Move base_url to config file
     def __init__(self, links, base_url='https://deals.jumia.ci'):
         super().__init__()
         spider_dir = path.dirname(__file__)
@@ -19,6 +21,7 @@ class PostsSpider(scrapy.Spider):
             self.start_urls = [base_url + line[0].strip() for line in csv_file]
 
     def parse(self, response):
+        # TODO: Move selectors to config file
         title_xpath = '//*[@id="main-holder"]/article/header/h1/span/text()'
         price_selector = '#priceSection > span > span:nth-child(1)::attr("content")'
         location_xpath = '//*[@id="priceSection"]/div/dl/dd[2]/span/text()'
