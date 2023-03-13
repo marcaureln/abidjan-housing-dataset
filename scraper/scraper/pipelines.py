@@ -9,23 +9,26 @@ from itemadapter import ItemAdapter
 import mysql.connector
 import tomli
 
+
 class ScraperPipeline:
+    '''Scrapy Item Pipeline: https://docs.scrapy.org/en/latest/topics/item-pipeline.html'''
+
     def __init__(self):
-        with open("../scraper.toml", mode="r") as config_file:
+        with open("scraper.toml", mode="rb") as config_file:
             self.config = tomli.load(config_file)
-            print(self.config)
 
         self.conn = mysql.connector.connect(
-            host = self.config["database"]["host"],
-            user = self.config["database"]["user"],
-            password = self.config["database"]["password"],
-            database = self.config["database"]["name"]
+            host=self.config["database"]["host"],
+            user=self.config["database"]["user"],
+            password=self.config["database"]["password"],
+            database=self.config["database"]["name"]
         )
-        
-        ## Create cursor, used to execute commands
+
+        # Create cursor, used to execute commands
         self.cur = self.conn.cursor()
-        
-        ## Create houses table if none exists
+
+        # Create houses table if none exists
+        # TODO: Add created_at and updated_at columns
         self.cur.execute("""
         CREATE TABLE IF NOT EXISTS houses(
             house_id int NOT NULL auto_increment,
@@ -40,25 +43,31 @@ class ScraperPipeline:
             PRIMARY KEY (house_id)
         )
         """)
-    
+
     def process_item(self, item, spider):
-        ## Define insert statement
-        self.cur.execute("""insert into houses (title, description, price, tot_no_room, area, location, pub_date, link) values (%s,%s,%s,%s,%s,%s,%s,%s)""", (
-            item["title"],
-            item["description"],
-            item["price"],
-            item["tot_no_room"],
-            item["area"],
-            item["location"],
-            item["pub_date"],
-            item["link"],
-        ))
+        '''Load items into database.
+        This method is called for every item pipeline component.'''
+        if spider.name == "links":
+            # TODO: Insert links and website name into database (prevent items from inserting twice)
+            print(item)
+        elif spider.name == "posts":
+            # TODO: Update houses table with new data
+            self.cur.execute("""INSERT INTO houses (title, description, price, tot_no_room, area, location, pub_date, link) VALUES (%s,%s,%s,%s,%s,%s,%s,%s)""", (
+                item["title"],
+                item["description"],
+                item["price"],
+                item["tot_no_room"],
+                item["area"],
+                item["location"],
+                item["pub_date"],
+                item["link"],
+            ))
+            self.conn.commit()
+        else:
+            raise ValueError("Invalid spider name!")
 
-        ## Execute insert of data into database
-        self.conn.commit()
-
-    
     def close_spider(self, spider):
-        ## Close cursor & connection to database 
+        '''Close cursor and database's connection. 
+        This method is called when the spider is closed.'''
         self.cur.close()
         self.conn.close()
