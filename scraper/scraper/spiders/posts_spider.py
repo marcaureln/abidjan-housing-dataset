@@ -21,7 +21,7 @@ class PostsSpider(scrapy.Spider):
             self.start_urls = [base_url + line[0].strip() for line in csv_file]
 
     def parse(self, response):
-        # TODO: Move selectors to config file
+    # TODO: Move selectors to config file
         title_xpath = '//*[@id="main-holder"]/article/header/h1/span/text()'
         price_selector = '#priceSection > span > span:nth-child(1)::attr("content")'
         location_xpath = '//*[@id="priceSection"]/div/dl/dd[2]/span/text()'
@@ -38,7 +38,8 @@ class PostsSpider(scrapy.Spider):
             'area': self.get_area(response.xpath(area_xpath).get()),
             'location': response.xpath(location_xpath).get(),
             'pub_date': response.css(pub_date_selector).get(),
-            'link': response.url
+            'link': response.url,
+            'from': response.css('title').get()
         }
 
     def remove_html(self, string):
