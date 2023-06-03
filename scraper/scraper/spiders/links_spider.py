@@ -9,6 +9,7 @@ class LinksSpider(scrapy.Spider):
     name = 'links'
 
     # TODO: Write a function to get config
+    
     config_file_path = Path("scraper.toml").resolve()
     with open(config_file_path, mode="rb") as config_file:
         config = tomli.load(config_file)
