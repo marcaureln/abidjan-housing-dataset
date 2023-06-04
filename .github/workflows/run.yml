@@ -25,8 +25,8 @@ jobs:
         run: echo "$SCRAPER_CONFIG" > scraper.toml
         working-directory: ./scraper
       - name: Run links spider
-        run: scrapy crawl links
+        run: poetry run scrapy crawl links
         working-directory: ./scraper
       - name: Run posts spider
-        run: scrapy crawl posts
+        run: poetry run scrapy crawl posts
         working-directory: ./scraper
