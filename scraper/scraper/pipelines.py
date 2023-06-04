@@ -43,8 +43,10 @@ class ScraperPipeline:
             sys.exit(1)
 
     def process_item(self, item, spider):
-        """Load items into database.
-        This method is called for every item pipeline component."""
+        """
+        Load items into database.
+        This method is called for every item pipeline component.
+        """
         if spider.name == "links":
             self.cur.execute(
                 """INSERT IGNORE INTO houses (link, website) VALUES (%s,%s)""",
@@ -73,7 +75,9 @@ class ScraperPipeline:
             raise ValueError("Invalid spider name!")
 
     def close_spider(self, _):
-        """Close cursor and database's connection.
-        This method is called when the spider is closed."""
+        """
+        Close cursor and database's connection.
+        This method is called when the spider is closed.
+        """
         self.cur.close()
         self.conn.close()
