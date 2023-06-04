@@ -1,20 +1,26 @@
-'''Import scrapy - web scraping framework'''
+"""Import scrapy - web scraping framework"""
 from pathlib import Path
 import scrapy
 import tomli
 
 
 class LinksSpider(scrapy.Spider):
-    '''Spider to crawl posts links from listing website.'''
+    """Spider to crawl posts links from listing website."""
     name = 'links'
+    base_url = ''
+    start_urls = []
 
+    # TODO: Move base_url to config file
     # TODO: Write a function to get config
-    
-    config_file_path = Path("scraper.toml").resolve()
-    with open(config_file_path, mode="rb") as config_file:
-        config = tomli.load(config_file)
 
-    start_urls = config["start_urls"]["links"]
+    def __init__(self, base_url='https://deals.jumia.ci'):
+        super().__init__()
+        config_file_path = Path("scraper.toml").resolve()
+        with open(config_file_path, mode="rb") as config_file:
+            config = tomli.load(config_file)
+
+        self.start_urls = config["start_urls"]["links"]
+        self.base_url = base_url
 
     def parse(self, response):
         config_file_path = Path("scraper.toml").resolve()
@@ -28,7 +34,7 @@ class LinksSpider(scrapy.Spider):
         for post in response.css('.post'):
             yield {
                 'name': config["selectors"]["links"][0]["name"],
-                'link': post.css(link_selector).get()
+                'link': self.base_url + post.css(link_selector).get()
             }
 
         next_page_selector = config["selectors"]["links"][0]["next_page"]
