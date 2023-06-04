@@ -4,11 +4,11 @@ user = 'admin'
 password = 'change-me'
 name = 'db-name'
 
-[start_urls]
-links = ['https://deals.co/appartements', 'https://deals.co/maisons']
+[links]
+base_url = 'https://deals.co'
+start_urls = ['https://deals.co/appartements', 'https://deals.co/maisons']
 
 [selectors]
-[[selectors.links]]
-name = 'Deals Co.'
+[selectors.links]
 link = 'div > a::attr("href")'
 next_page = 'nav > a::attr("href")'

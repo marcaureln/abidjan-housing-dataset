@@ -24,6 +24,7 @@ class ScraperPipeline:
                        CREATE TABLE IF NOT EXISTS houses(
                            house_id INT NOT NULL AUTO_INCREMENT,
                            title VARCHAR(255),
+                           link VARCHAR(768),
                            description TEXT,
                            price INT,
                            tot_no_room INT,
@@ -48,10 +49,7 @@ class ScraperPipeline:
         This method is called for every item pipeline component.
         """
         if spider.name == "links":
-            self.cur.execute(
-                """INSERT IGNORE INTO houses (link, website) VALUES (%s,%s)""",
-                (item["link"], item["name"])
-            )
+            self.cur.execute("""INSERT IGNORE INTO houses (link) VALUES (%s)""", (item["link"],))
             self.conn.commit()
         elif spider.name == "posts":
             self.cur.execute(
