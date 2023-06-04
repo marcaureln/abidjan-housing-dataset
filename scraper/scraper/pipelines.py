@@ -1,3 +1,5 @@
+import sys
+
 import mysql.connector
 import tomli
 
@@ -38,7 +40,7 @@ class ScraperPipeline:
                        """)
         except mysql.connector.Error as e:
             print("Error while connecting to MySQL", e)
-            exit(1)
+            sys.exit(1)
 
     def process_item(self, item, spider):
         """Load items into database.
