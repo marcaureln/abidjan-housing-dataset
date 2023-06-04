@@ -70,7 +70,7 @@ class ScraperPipeline:
         else:
             raise ValueError("Invalid spider name!")
 
-    def close_spider(self, spider):
+    def close_spider(self, _):
         """Close cursor and database's connection.
         This method is called when the spider is closed."""
         self.cur.close()
