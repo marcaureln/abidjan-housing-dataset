@@ -1,0 +1,32 @@
+name: Run spiders
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+jobs:
+  run:
+    name: Run spiders
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install Poetry
+        run: curl -sSL https://install.python-poetry.org | python3 -
+      - name: Install dependencies
+        run: poetry install
+      - name: Set up scraper config
+        env:
+          SCRAPER_CONFIG: ${{secrets.SCRAPER_CONFIG}}
+        shell: bash
+        run: echo "$SCRAPER_CONFIG" > scraper.toml
+        working-directory: ./scraper
+      - name: Run links spider
+        run: scrapy crawl links
+        working-directory: ./scraper
+      - name: Run posts spider
+        run: scrapy crawl posts
+        working-directory: ./scraper
