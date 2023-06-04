@@ -28,13 +28,11 @@ class ScraperPipeline:
                            description TEXT,
                            price INT,
                            tot_no_room INT,
-                           area TEXT,
+                           area FLOAT,
                            location TEXT,
-                           pub_date VARCHAR(255),
-                           link VARCHAR(768),
-                           website TEXT,
-                           created_at DATE,
-                           updated_at DATE,
+                           published_at TEXT,
+                           created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                           updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                            PRIMARY KEY (house_id),
                            UNIQUE INDEX unique_link USING HASH (link)
                        );
@@ -52,22 +50,27 @@ class ScraperPipeline:
             self.cur.execute("""INSERT IGNORE INTO houses (link) VALUES (%s)""", (item["link"],))
             self.conn.commit()
         elif spider.name == "posts":
-            self.cur.execute(
-                """UPDATE houses
-                SET title = %s, description = %s, price = %s, tot_no_room = %s, area = %s, location = %s, pub_date = %s
-                WHERE link = %s
-                """,
-                (
-                    item["title"],
-                    item["description"],
-                    item["price"],
-                    item["tot_no_room"],
-                    item["area"],
-                    item["location"],
-                    item["pub_date"],
-                    item["link"],
-                )
-            )
+            self.cur.execute("""UPDATE houses
+                                SET title = %s, 
+                                    description = %s, 
+                                    price = %s, 
+                                    tot_no_room = %s, 
+                                    area = %s, 
+                                    location = %s, 
+                                    published_at = %s
+                                WHERE link = %s
+                                """,
+                             (
+                                 item["title"],
+                                 item["description"],
+                                 item["price"],
+                                 item["tot_no_room"],
+                                 item["area"],
+                                 item["location"],
+                                 item["published_at"],
+                                 item["link"],
+                             )
+                             )
             self.conn.commit()
         else:
             raise ValueError("Invalid spider name!")
