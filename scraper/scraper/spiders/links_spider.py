@@ -1,25 +1,43 @@
-'''Import scrapy - web scraping framework'''
+"""Import scrapy - web scraping framework"""
+from pathlib import Path
 import scrapy
+import tomli
 
 
 class LinksSpider(scrapy.Spider):
-    '''Spider to crawl posts links from listing website.'''
+    """Spider to crawl posts links from listing website."""
     name = 'links'
-    start_urls = [
-        'https://deals.jumia.ci/abidjan/appartements-a-vendre',
-        'https://deals.jumia.ci/abidjan/maisons-a-vendre'
-    ]
+    base_url = ''
+    start_urls = []
+
+    # TODO: Move base_url to config file
+    # TODO: Write a function to get config
+
+    def __init__(self, base_url='https://deals.jumia.ci'):
+        super().__init__()
+        config_file_path = Path("scraper.toml").resolve()
+        with open(config_file_path, mode="rb") as config_file:
+            config = tomli.load(config_file)
+
+        self.start_urls = config["start_urls"]["links"]
+        self.base_url = base_url
 
     def parse(self, response):
+        config_file_path = Path("scraper.toml").resolve()
+        with open(config_file_path, mode="rb") as config_file:
+            config = tomli.load(config_file)
+
         # link_selector is relative to the current post element (.post)
-        link_selector = 'div.text-area > div > div.announcement-infos > a::attr("href")'
+        # TODO: Loop through ["selectors"]["links"]
+        link_selector = config["selectors"]["links"][0]["link"]
 
         for post in response.css('.post'):
             yield {
-                'link': post.css(link_selector).get()
+                'name': config["selectors"]["links"][0]["name"],
+                'link': self.base_url + post.css(link_selector).get()
             }
 
-        next_page_selector = '#tab1 > nav > ul > li.next > a::attr("href")'
+        next_page_selector = config["selectors"]["links"][0]["next_page"]
         next_page = response.css(next_page_selector).get()
 
         if next_page is not None:
