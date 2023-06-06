@@ -4,27 +4,50 @@ on:
   workflow_dispatch:
 
 jobs:
-  run:
-    name: Run spiders
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
         with:
           python-version: '3.10'
-      - name: Install Poetry
-        run: curl -sSL https://install.python-poetry.org | python3 -
+          cache: 'poetry'
+      - name: Install poetry
+        run: pipx install poetry
       - name: Install dependencies
-        run: poetry install
+        run: poetry config virtualenvs.in-project false && poetry install
       - name: Set up scraper config
         env:
           SCRAPER_CONFIG: ${{secrets.SCRAPER_CONFIG}}
         shell: bash
         run: echo "$SCRAPER_CONFIG" > scraper.toml
         working-directory: ./scraper
+
+  links:
+    name: Run links spider
+    needs: [ setup ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'poetry'
       - name: Run links spider
         run: poetry run scrapy crawl links
         working-directory: ./scraper
-      - name: Run posts spider
+
+  posts:
+    name: Run posts spider
+    needs: [ setup, links ]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+          cache: 'poetry'
+      - name: Run links spider
         run: poetry run scrapy crawl posts
         working-directory: ./scraper
