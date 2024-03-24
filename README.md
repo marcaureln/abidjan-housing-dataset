@@ -28,7 +28,7 @@ exit
 
 - `scraper/`: [Scrapy](https://scrapy.org/) project to scrape data.
 - `notebooks/`: Jupyter notebooks to explore and clean the data.
-- `input/`: Raw and unprocessed from the scraper.
+- `input/`: Raw and unprocessed data from the scraper.
 
 ## Contributors
 
